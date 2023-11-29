@@ -14,6 +14,7 @@ local path = mod_loader.mods[modApi.currentMod].resourcePath
 	
 	modApi:appendAsset("img/effects/leechedblood.png", path .."img/effects/leechedblood.png")
 	modApi:appendAsset("img/combat/icons/icon_revive.png", path .."img/combat/icons/icon_revive.png")
+	Location["combat/icons/icon_revive.png"] = Point(-26,2)
 	modApi:appendAsset("img/effects/undyingplague_U.png", path .."img/effects/undyingplague_U.png")
 	modApi:appendAsset("img/effects/undyingplague_R.png", path .."img/effects/undyingplague_R.png")
 	modApi:appendAsset("img/effects/undyingplague_D.png", path .."img/effects/undyingplague_D.png")
