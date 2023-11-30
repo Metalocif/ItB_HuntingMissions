@@ -224,7 +224,7 @@ local path = mod_loader.mods[modApi.currentMod].resourcePath
 	modApi:appendAsset("img/units/mission/stakeunit_revup.png", path .."img/units/mission/stakeunit_revup.png")
 	modApi:appendAsset("img/units/mission/stakeunit_broken.png", path .."img/units/mission/stakeunit_broken.png")
 	
-	a.stakeunit = a.BaseUnit:new{Image = "units/mission/stakeunit.png", PosX = -20, PosY = -21, Height = 1 }
+	a.stakeunit = a.BaseUnit:new{Image = "units/mission/stakeunit.png", PosX = -20, PosY = -15, Height = 1 }
 	a.stakeunita = a.stakeunit:new{Image = "units/mission/stakeunit_a.png", NumFrames = 4, Time = 0.6 }
 	a.stakeunitrevup = a.stakeunit:new{Image = "units/mission/stakeunit_revup.png", NumFrames = 4, Time = 0.3 }
 	
@@ -314,7 +314,9 @@ function Meta_StakeAtk:GetSkillEffect(p1,p2)
 	ret:AddScript(string.format("Board:GetPawn(%s):SetCustomAnim(%q)", p1:GetString(), "stakeunit"))
 	while true do
 		if Board:IsBlocked(target, pathing) and not Board:GetPawn(target) then break end
-		if Board:GetPawn(target) and Board:GetPawn(target):GetHealth() > damageAmount then break end
+		if Board:GetPawn(target) and 
+			(Board:GetPawn(target):GetHealth() > damageAmount or
+			Board:GetPawn(target):IsAcid() and Board:GetPawn(target):GetHealth() > damageAmount * 2) then break end
 		if not Board:IsValid(target + DIR_VECTORS[direction]) then break end
 		target = target + DIR_VECTORS[direction]
 	end
@@ -343,7 +345,8 @@ function Meta_StakeAtk:GetSkillEffect(p1,p2)
 			
 			if Board:GetPawn(temp) and temp ~= p1 then
 				ret:AddDamage(SpaceDamage(temp, 1))
-				if Board:GetPawn(temp):GetType() == "Meta_VampiricVek" and Board:GetPawn(temp):GetHealth() <= damageAmount then 
+				if Board:GetPawn(temp):GetType() == "Meta_VampiricVek" and (Board:GetPawn(temp):GetHealth() <= damageAmount) or
+				   (Board:GetPawn(temp):IsAcid() and Board:GetPawn(temp):GetHealth() <= damageAmount * 2) then 
 					ret:AddScript("GetCurrentMission().Staked = true") 
 				end
 			end
